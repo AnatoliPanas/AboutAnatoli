@@ -1,0 +1,32 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div class="space-y-12">
+    <section class="bg-slate-800/40 rounded-3xl border border-slate-700/50 p-8 md:p-12 shadow-xl">
+        <div class="max-w-2xl">
+
+            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">
+                {{ profile.headline }}
+            </span>
+
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mt-4 tracking-tight">
+                Ich bin {{ profile.owner_first_name }} {{ profile.owner_last_name }}
+            </h1>
+
+            <p class="mt-6 text-lg text-slate-400 leading-relaxed">
+                {{ profile.description }}
+            </p>
+
+            <div id="action-zone" class="mt-8">
+                <button hx-get="{% url 'website:get_info' %}"
+                        hx-target="#action-zone"
+                        hx-swap="outerHTML"
+                        class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-6 rounded-xl transition shadow-lg shadow-indigo-600/20 cursor-pointer">
+                    Mehr über meinen Tech-Stack erfahren
+                </button>
+            </div>
+
+        </div>
+    </section>
+</div>
+{% endblock %}

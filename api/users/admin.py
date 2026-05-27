@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from django.db.models import Q
 from django.utils import timezone
-from .models import User
+from .models import User, Profile
 
 
 @admin.register(User)
@@ -171,3 +171,25 @@ class CustomUserAdmin(UserAdmin):
             if not obj.is_superuser and obj.role == 'ADMIN':
                 obj.is_staff = True
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    # Какие поля отображать в таблице списка профилей
+    list_display = ('get_owner_fullname', 'country', 'city', 'headline', 'created_at')
+
+    # По каким полям можно фильтровать записи (появится панель справа)
+    list_filter = ('country', 'city', 'created_at')
+
+    # По каким полям будет работать строка поиска вверху страницы
+    search_fields = ('headline', 'description', 'city', 'owner__username', 'owner__first_name')
+
+    # Поля, которые Django заполнит автоматически (дата создания)
+    readonly_fields = ('created_at', 'updated_at')
+
+    @admin.display(description='Besitzer (Name)')
+    def get_owner_fullname(self, obj):
+        """Метод для красивого вывода имени владельца в списке таблиц"""
+        if obj.owner:
+            return f"{obj.owner.first_name} {obj.owner.last_name} ({obj.owner.username})"
+        return "-"
